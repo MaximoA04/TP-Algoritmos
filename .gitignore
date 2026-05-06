@@ -1,0 +1,19 @@
+# === Archivos de configuración de Code::Blocks ===
+*.layout
+*.depend
+
+# === Archivos temporales de CMake ===
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+build/
+
+# === Binarios y Objetos (Compilación) ===
+bin/
+obj/
+*.out
+*.exe
+
+# === Otros (Windows y VS Code) ===
+Thumbs.db
+.vscode/
