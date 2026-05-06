@@ -6,6 +6,7 @@
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+build/
 
 # === Binarios y Objetos (Compilación) ===
 bin/
