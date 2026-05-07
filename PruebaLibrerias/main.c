@@ -28,6 +28,7 @@
 void subMenuPila();
 void subMenuCola();
 void subMenuLista();
+void subMenuListaCircular();
 void pausa();
 
 int compararInt(const void* a, const void* b);
@@ -60,6 +61,7 @@ int main()
         printf("\n" CYAN "1. PROBAR PILA" RESET);
         printf("\n" CYAN "2. PROBAR COLA" RESET);
         printf("\n" CYAN "3. PROBAR LISTA" RESET);
+        printf("\n" CYAN "4. PROBAR LISTA CICULAR" RESET);
         printf("\n" ROJO "0. SALIR" RESET);
         printf("\n\nSeleccione una opcion: ");
 
@@ -67,9 +69,7 @@ int main()
 
         if (leidos != 1)
         {
-            printf(ROJO "Error: Ingrese un numero valido.\n" RESET);
-            fflush(stdin);
-            pausa();
+            while(getchar() != '\n');
             opcion = -1;
         }
 
@@ -84,11 +84,14 @@ int main()
         case 3:
             subMenuLista();
             break;
+        case 4:
+            subMenuListaCircular();
+            break;
         case 0:
-            printf(MAG "Finalizando programa...\n" RESET);
+            printf(MAG "\nFinalizando programa...\n" RESET);
             break;
         default:
-            if (leidos == 1)
+            if(opcion != -1)
             {
                 printf(ROJO "Opcion invalida.\n" RESET);
                 pausa();
@@ -323,6 +326,12 @@ void subMenuLista()
         }
     }
     while (op != 0);
+}
+
+void subMenuListaCircular()
+{
+    printf(AMAR "\nLista Circular en construiccion...\n" RESET);
+    pausa();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////

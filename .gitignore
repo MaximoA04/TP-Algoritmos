@@ -12,6 +12,7 @@ build/
 bin/
 obj/
 *.out
+*.exe
 
 # === Otros (Windows y VS Code) ===
 Thumbs.db
