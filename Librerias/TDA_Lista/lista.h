@@ -8,9 +8,6 @@
 
 
 typedef tNodo *tLista;
-typedef int (*Comparar)(const void*, const void*);
-typedef void (*Accion)(void*, const void *);
-typedef void (*Mostrar)(const void*);
 
 void crearLista(tLista *p);
 void vaciarLista(tLista *p);

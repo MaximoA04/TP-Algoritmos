@@ -4,15 +4,17 @@
 #include "pila.h"
 #include "cola.h"
 #include "lista.h"
+#include "listaCircular.h"
+#include "listaDoble.h"
 
 #ifdef _WIN32
-    #include <windows.h>
-    #define LIMPIAR_PANTALLA system("cls")
-    #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
-        #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
-    #endif
+#include <windows.h>
+#define LIMPIAR_PANTALLA system("cls")
+#ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#endif
 #else
-    #define LIMPIAR_PANTALLA system("clear")
+#define LIMPIAR_PANTALLA system("clear")
 #endif
 
 /* DEFINES DE COLORES */
@@ -29,6 +31,7 @@ void subMenuPila();
 void subMenuCola();
 void subMenuLista();
 void subMenuListaCircular();
+void subMenuListaDoble();
 void pausa();
 
 int compararInt(const void* a, const void* b);
@@ -54,14 +57,15 @@ int main()
 
     while (opcion != 0)
     {
-        LIMPIAR_PANTALLA; // Refresco de pantalla inicial
-        printf(AZUL "========================================");
-        printf("\n" AZUL "          MENU DE PRUEBAS           \n");
-        printf("========================================\n" RESET);
+        LIMPIAR_PANTALLA;
+        printf(AZUL "=======================================");
+        printf("\n            MENU DE PRUEBAS          \n");
+        printf("=======================================\n" RESET);
         printf("\n" CYAN "1. PROBAR PILA" RESET);
         printf("\n" CYAN "2. PROBAR COLA" RESET);
         printf("\n" CYAN "3. PROBAR LISTA" RESET);
         printf("\n" CYAN "4. PROBAR LISTA CICULAR" RESET);
+        printf("\n" CYAN "5. PROBAR LISTA DOBLE" RESET);
         printf("\n" ROJO "0. SALIR" RESET);
         printf("\n\nSeleccione una opcion: ");
 
@@ -87,6 +91,9 @@ int main()
         case 4:
             subMenuListaCircular();
             break;
+        case 5:
+            subMenuListaDoble();
+            break;
         case 0:
             printf(MAG "\nFinalizando programa...\n" RESET);
             break;
@@ -98,6 +105,7 @@ int main()
             }
         }
     }
+
     return TODO_OK;
 }
 
@@ -109,7 +117,6 @@ void pausa()
     getchar();
     if(getchar()) {}
 }
-
 void subMenuPila()
 {
     tPila pila;
@@ -168,7 +175,6 @@ void subMenuPila()
     }
     while (op != 0);
 }
-
 void subMenuCola()
 {
     tCola cola;
@@ -227,7 +233,6 @@ void subMenuCola()
     }
     while (op != 0);
 }
-
 void subMenuLista()
 {
     tLista lista;
@@ -310,7 +315,7 @@ void subMenuLista()
         case 8:
             printf(VERDE "Lista: [ " RESET);
             mostrarLista(&lista, mostrarInt);
-            printf(VERDE "]\n" RESET);
+            printf(VERDE " ]\n" RESET);
             pausa();
             break;
         case 9:
@@ -327,11 +332,206 @@ void subMenuLista()
     }
     while (op != 0);
 }
-
 void subMenuListaCircular()
 {
-    printf(AMAR "\nLista Circular en construiccion...\n" RESET);
-    pausa();
+    tListaC listaC;
+    crearListaC(&listaC);
+    int op, dato, res;
+
+    do
+    {
+        LIMPIAR_PANTALLA;
+        printf(AZUL "\n--- MODULO LISTA CIRCULAR ---\n" RESET);
+        printf(CYAN "\n1. Insertar Ordenado"
+               "\n2. Insertar al Principio (Push Pila/Cola)"
+               "\n3. Insertar al Final (Encolar)"
+               "\n4. Eliminar Especifico"
+               "\n5. Eliminar Primero (Pop Pila/Desacolar)"
+               "\n6. Eliminar Ultimo"
+               "\n7. Mostrar Lista"
+               "\n8. Vaciar Lista"
+               "\n" ROJO "0. Volver" RESET
+               "\n\nOpcion: ");
+
+        if (scanf("%d", &op) != 1)
+        {
+            while(getchar() != '\n');
+            op = -1;
+        }
+
+        switch (op)
+        {
+        case 1:
+            printf("Dato: ");
+            scanf("%d", &dato);
+            res = insertarEnListaC(&listaC, &dato, sizeof(int), compararInt);
+            printf(res == TODO_OK ? VERDE "Agregado.\n" RESET : ROJO "Error en la insercion.\n" RESET);
+            pausa();
+            break;
+        case 2:
+            printf("Dato: ");
+            scanf("%d", &dato);
+            res = insertarPriC(&listaC, &dato, sizeof(int));
+            printf(res == TODO_OK ? VERDE "Agregado.\n" RESET : ROJO "Error en la insercion.\n" RESET);
+            pausa();
+            break;
+        case 3:
+            printf("Dato: ");
+            scanf("%d", &dato);
+            res = insertarUltC(&listaC, &dato, sizeof(int));
+            printf(res == TODO_OK ? VERDE "Agregado.\n" RESET : ROJO "Error en la insercion.\n" RESET);
+            pausa();
+            break;
+        case 4:
+            printf("Dato a eliminar: ");
+            scanf("%d", &dato);
+            res = eliminarElemC(&listaC, &dato, sizeof(int), compararInt);
+            if(res == TODO_OK)
+                printf(VERDE "Elemento %d eliminado.\n" RESET, dato);
+            else
+                printf(AMAR "No se encontro el dato.\n" RESET);
+            pausa();
+            break;
+        case 5:
+            res = eliminarPriC(&listaC, &dato, sizeof(int));
+            if(res == TODO_OK)
+                printf(VERDE "Eliminado primero: %d\n" RESET, dato);
+            else
+                printf(ROJO "Lista vacia.\n" RESET);
+            pausa();
+            break;
+        case 6:
+            res = eliminarUltC(&listaC, &dato, sizeof(int));
+            if(res == TODO_OK)
+                printf(VERDE "Eliminado ultimo: %d\n" RESET, dato);
+            else
+                printf(ROJO "Lista vacia.\n" RESET);
+            pausa();
+            break;
+        case 7:
+            printf(VERDE "Lista (ASCD): [ " RESET);
+            mostrarListaC(&listaC, mostrarInt);
+            printf(VERDE " ]\n" RESET);
+            pausa();
+            break;
+        case 8:
+            vaciarListaC(&listaC);
+            printf(AMAR "Lista vaciada.\n" RESET);
+            pausa();
+            break;
+        case 0:
+            vaciarListaC(&listaC);
+            break;
+        default:
+            printf(ROJO "Opcion invalida.\n" RESET);
+            pausa();
+        }
+    }
+    while (op != 0);
+}
+void subMenuListaDoble()
+{
+    tListaD listaD;
+    crearListaD(&listaD);
+    int op, dato, res;
+
+    do
+    {
+        LIMPIAR_PANTALLA;
+        printf(AZUL "\n--- MODULO LISTA ---\n" RESET);
+        printf(CYAN "\n1. Insertar Ordenado"
+               "\n2. Insertar al Principio"
+               "\n3. Insertar al Final"
+               "\n4. Eliminar Especifico"
+               "\n5. Eliminar Primero"
+               "\n6. Eliminar Ultimo"
+               "\n7. Mostrar Ascendente"
+               "\n8. Mostrar Descendente"
+               "\n9. Vaciar Lista"
+               "\n" ROJO "0. Volver" RESET
+               "\n\nOpcion: ");
+
+        if (scanf("%d", &op) != 1)
+        {
+            while(getchar() != '\n');
+            op = -1;
+        }
+
+        switch (op)
+        {
+        case 1:
+            printf("Dato: ");
+            scanf("%d", &dato);
+            res = insertarEnListaD(&listaD, &dato, sizeof(int), 1, compararInt, NULL);
+            printf(res == TODO_OK ? VERDE "Agregado.\n" RESET : ROJO "Error en la insercion.\n" RESET);
+            pausa();
+            break;
+        case 2:
+            printf("Dato: ");
+            scanf("%d", &dato);
+            res = insertarPriListaD(&listaD, &dato, sizeof(int));
+            printf(res == TODO_OK ? VERDE "Agregado al principio.\n" RESET : ROJO "Error en la insercion.\n" RESET);
+            pausa();
+            break;
+        case 3:
+            printf("Dato: ");
+            scanf("%d", &dato);
+            res = insertarUltListaD(&listaD, &dato, sizeof(int));
+            printf(res == TODO_OK ? VERDE "Agregado al final.\n" RESET : ROJO "Error en la insercion.\n" RESET);
+            pausa();
+            break;
+        case 4:
+            printf("Dato a eliminar: ");
+            scanf("%d", &dato);
+            res = eliminarDeListaD(&listaD, &dato, compararInt);
+            if(res == TODO_OK)
+                printf(VERDE "Eliminado.\n" RESET);
+            else
+                printf(AMAR "No se encontro el dato.\n" RESET);
+            pausa();
+            break;
+        case 5:
+            res = eliminarPriListaD(&listaD, &dato, sizeof(int));
+            if(res == TODO_OK)
+                printf(VERDE "Se saco el primero: %d\n" RESET, dato);
+            else
+                printf(ROJO "Lista vacia.\n" RESET);
+            pausa();
+            break;
+        case 6:
+            res = eliminarUltListaD(&listaD, &dato, sizeof(int));
+            if(res == TODO_OK)
+                printf(VERDE "Se saco el ultimo: %d\n" RESET, dato);
+            else
+                printf(ROJO "Lista vacia.\n" RESET);
+            pausa();
+            break;
+        case 7:
+            printf(VERDE "Lista (ASCD): [ " RESET);
+            mostrarListaD(&listaD, ASCD, mostrarInt);
+            printf(VERDE " ]\n" RESET);
+            pausa();
+            break;
+        case 8:
+            printf(VERDE "Lista (DSCD): [ " RESET);
+            mostrarListaD(&listaD, DSCD, mostrarInt);
+            printf(VERDE " ]\n" RESET);
+            pausa();
+            break;
+        case 9:
+            vaciarListaD(&listaD);
+            printf(AMAR "Lista vaciada.\n" RESET);
+            pausa();
+            break;
+        case 0:
+            vaciarListaD(&listaD);
+            break;
+        default:
+            printf(ROJO "Opcion invalida.\n" RESET);
+            pausa();
+        }
+    }
+    while (op != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -339,8 +539,11 @@ int compararInt(const void* a, const void* b)
 {
     return (*(int*)a - *(int*)b);
 }
-
 void mostrarInt(const void* a)
 {
     printf(AMAR "%d" RESET, *(int*)a);
 }
+
+
+
+

@@ -199,7 +199,6 @@ void mostrarLista(const tLista *p, Mostrar f_Mostrar)
 {
     if(!p)
         return;
-    printf("\n");
     while((*p)->sigN)
     {
         f_Mostrar((*p)->dato);
@@ -207,7 +206,6 @@ void mostrarLista(const tLista *p, Mostrar f_Mostrar)
         p = &(*p)->sigN;
     }
     f_Mostrar((*p)->dato);
-    printf("\n");
 }
 
 
